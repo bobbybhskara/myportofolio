@@ -28,7 +28,7 @@ body {
 }
 
 h1, .brand {
-    font-family: "Space Grotesk", -apple-system, sans-serif;
+    font-family: "Poppins", -apple-system, sans-serif;
 }
 
 .container {
@@ -192,12 +192,12 @@ main > section {
 
 .project-overlay h3,
 .project-mobile-title {
-    font-family: "Space Grotesk", -apple-system, sans-serif;
+    font-family: "Poppins", -apple-system, sans-serif;
 }
 
 .section-heading {
     margin-bottom: 2rem;
-    font-family: "Space Grotesk", -apple-system, sans-serif;
+    font-family: "Poppins", -apple-system, sans-serif;
     font-size: clamp(2rem, 5vw, 3rem);
     font-weight: 700;
     line-height: 1;
@@ -327,7 +327,7 @@ main > section {
 
 .project-placeholder h3 {
     color: var(--ink);
-    font-family: "Space Grotesk", -apple-system, sans-serif;
+    font-family: "Poppins", -apple-system, sans-serif;
     font-size: 1.15rem;
     font-weight: 700;
 }
@@ -339,7 +339,7 @@ main > section {
 }
 
 .experience-entry h3 {
-    font-family: "Space Grotesk", -apple-system, sans-serif;
+    font-family: "Poppins", -apple-system, sans-serif;
 }
 
 .timeline {
