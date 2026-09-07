@@ -5,23 +5,20 @@
 }
 
 :root {
-    --ink: #f7f5ff;
-    --paper: #0b1020;
-    --surface: #151b31;
-    --accent: #b8ff5a;
-    --accent-dark: #a58bff;
-    --line: rgba(247, 245, 255, 0.16);
-    --text-muted: #b8bfd3;
+    --ink: #1E2A4A;
+    --paper: #FFFFFF;
+    --surface: #F4F7FC;
+    --accent: #5B7FA6;
+    --accent-dark: #2563EB;
+    --line: #DCE3F0;
+    --text-muted: #64748B;
     --radius: 14px;
 }
 
 body {
     font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     color: var(--ink);
-    background:
-        radial-gradient(circle at 12% 18%, rgba(165, 139, 255, 0.18), transparent 28rem),
-        radial-gradient(circle at 88% 75%, rgba(184, 255, 90, 0.10), transparent 24rem),
-        var(--paper);
+    background-color: var(--paper);
     line-height: 1.6;
 }
 
@@ -42,8 +39,7 @@ h1, .brand {
 
 .site-header {
     border-bottom: 1px solid var(--line);
-    background-color: rgba(11, 16, 32, 0.72);
-    backdrop-filter: blur(12px);
+    background-color: var(--ink);
 }
 
 .site-header .container {
@@ -56,7 +52,7 @@ h1, .brand {
 .brand {
     font-size: 1.3rem;
     font-weight: 700;
-    color: var(--ink);
+    color: var(--paper);
     text-decoration: none;
 }
 
@@ -66,7 +62,7 @@ h1, .brand {
 }
 
 .site-header nav a {
-    color: var(--ink);
+    color: var(--paper);
     text-decoration: none;
     font-size: 0.95rem;
 }
@@ -109,10 +105,6 @@ h1, .brand {
     font-size: clamp(3rem, 7vw, 5rem);
     line-height: 0.95;
     color: var(--ink);
-    background: linear-gradient(120deg, var(--ink) 35%, var(--accent-dark));
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
 }
 
 .bio {
@@ -129,7 +121,7 @@ h1, .brand {
 
 .meta-row {
     padding: 0.7rem 0.9rem;
-    background-color: rgba(21, 27, 49, 0.72);
+    background-color: var(--surface);
     border: 1px solid var(--line);
     border-radius: calc(var(--radius) - 4px);
 }
@@ -203,7 +195,7 @@ h1, .brand {
     color: var(--text-muted);
     font-size: 0.85rem;
     border-top: 1px solid var(--line);
-    background-color: rgba(11, 16, 32, 0.46);
+    background-color: var(--surface);
 }
 
 @media (max-width: 600px) {
