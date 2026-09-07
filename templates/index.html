@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/style.css">
+    <script src="/static/js/carousel.js" defer></script>
 </head>
 <body>
     <header class="site-header">
@@ -28,7 +29,18 @@
                 </div>
                 <div class="hero-photo">
                     <div class="photo-block"></div>
-                    <img class="avatar" src="/static/img/DSC00774.jpg" alt="Photo of Bobby">
+                    <div class="photo-carousel" data-carousel tabindex="0" role="region" aria-label="Bobby's photo gallery">
+                        <div class="photo-track" data-carousel-track>
+                            <img class="avatar" src="/static/img/DSC00774.jpg" alt="Portrait of Bobby">
+                            <img class="avatar" src="/static/img/profile-2.jpg" data-fallback="/static/img/DSC00774.jpg" alt="Bobby's second gallery photo">
+                            <img class="avatar" src="/static/img/profile-3.jpg" data-fallback="/static/img/DSC00774.jpg" alt="Bobby's third gallery photo">
+                            <img class="avatar" src="/static/img/profile-4.jpg" data-fallback="/static/img/DSC00774.jpg" alt="Bobby's fourth gallery photo">
+                            <img class="avatar" src="/static/img/profile-5.jpg" data-fallback="/static/img/DSC00774.jpg" alt="Bobby's fifth gallery photo">
+                        </div>
+                        <button class="carousel-button carousel-button--previous" type="button" data-carousel-previous aria-label="Show previous photo">&#8592;</button>
+                        <button class="carousel-button carousel-button--next" type="button" data-carousel-next aria-label="Show next photo">&#8594;</button>
+                        <p class="visually-hidden" data-carousel-status aria-live="polite">Photo 1 of 5</p>
+                    </div>
                 </div>
                 <div class="hero-details">
                     <p class="bio">Information Systems student at Fasilkom UI with a growing interest in technology and its impact on society. Working collaboratively, thinking critically, and approaching problems with attention to detail.</p>
@@ -121,8 +133,8 @@
 
                     <article class="project-placeholder" aria-label="More Projects Coming Soon!">
                         <div>
-                            <h3>More projects</h3>
-                            <p>coming soon</p>
+                            <h3>More Projects</h3>
+                            <p>Coming Soon!</p>
                         </div>
                     </article>
                 </div>
@@ -196,6 +208,42 @@
                         </li>
                     </ol>
                 </div>
+            </div>
+        </section>
+
+        <section class="education" id="education">
+            <div class="container">
+                <h2 class="section-heading">Education</h2>
+
+                <ol class="education-timeline">
+                    <li class="education-entry">
+                        <article class="education-card">
+                            <img class="education-logo" src="/static/img/edu-alazhar.jpg" alt="SMPI Al Azhar 8 Kemang Pratama logo">
+                            <h3>SMPI Al Azhar 8 Kemang Pratama</h3>
+                            <p class="education-date">2019 &ndash; 2022</p>
+                        </article>
+                    </li>
+
+                    <li class="education-entry">
+                        <article class="education-card">
+                            <img class="education-logo" src="/static/img/edu-labschool.jpg" alt="SMAS Labschool Jakarta logo">
+                            <h3>SMAS Labschool Jakarta</h3>
+                            <p class="education-program">Science and Technology Track</p>
+                            <p class="education-date">2022 &ndash; 2025</p>
+                            <p class="education-score">Score: <strong>93.04 / 100</strong></p>
+                        </article>
+                    </li>
+
+                    <li class="education-entry is-current">
+                        <article class="education-card">
+                            <img class="education-logo" src="/static/img/edu-ui.jpg" alt="Universitas Indonesia logo">
+                            <h3>Universitas Indonesia</h3>
+                            <p class="education-program">Bachelor of Computer Science, Information Systems</p>
+                            <p class="education-date">2025 &ndash; Present</p>
+                            <p class="education-score">Cumulative GPA: <strong>3.60 / 4.00</strong></p>
+                        </article>
+                    </li>
+                </ol>
             </div>
         </section>
     </main>
