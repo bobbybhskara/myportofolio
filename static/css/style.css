@@ -50,8 +50,8 @@ h1, .brand {
 }
 
 .brand {
-    font-size: 1.3rem;
-    font-weight: 700;
+    font-size: 1rem;
+    font-weight: 500;
     color: var(--paper);
     text-decoration: none;
 }
@@ -344,7 +344,7 @@ main > section {
 
 .timeline {
     position: relative;
-    max-width: 760px;
+    width: 100%;
 }
 
 .experience-timeline {
@@ -385,6 +385,29 @@ main > section {
 
 .experience-entry.is-current::before {
     background-color: var(--accent);
+}
+
+.experience-content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: clamp(2rem, 6vw, 6rem);
+}
+
+.experience-copy {
+    flex: 1;
+    min-width: 0;
+}
+
+.experience-thumbnail {
+    flex: 0 0 116px;
+    width: 116px;
+    height: 116px;
+    margin-left: auto;
+    object-fit: cover;
+    object-position: center;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
 }
 
 .experience-date {
@@ -467,6 +490,18 @@ main > section {
 
     .experience-description {
         font-size: 0.88rem;
+    }
+
+    .experience-content {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .experience-thumbnail {
+        flex-basis: auto;
+        width: 88px;
+        height: 88px;
+        margin-left: 0;
     }
 }
 
