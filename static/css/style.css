@@ -4,6 +4,10 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 :root {
     --ink: #1E2A4A;
     --paper: #FFFFFF;
@@ -62,13 +66,33 @@ h1, .brand {
 }
 
 .site-header nav a {
+    position: relative;
     color: var(--paper);
     text-decoration: none;
     font-size: 0.95rem;
+    transition: color 0.2s ease;
+}
+
+.site-header nav a::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: -0.3rem;
+    left: 0;
+    height: 2px;
+    background-color: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.2s ease;
 }
 
 .site-header nav a:hover {
     color: var(--accent);
+}
+
+.site-header nav a:hover::after,
+.site-header nav a:focus-visible::after {
+    transform: scaleX(1);
 }
 
 main > section {
@@ -610,6 +634,22 @@ main > section {
 }
 
 @media (max-width: 600px) {
+    .site-header .container {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .site-header nav {
+        justify-content: space-between;
+        width: 100%;
+        gap: 0.75rem;
+    }
+
+    .site-header nav a {
+        font-size: 0.78rem;
+    }
+
     .hero-grid {
         grid-template-columns: 1fr;
         grid-template-areas:
