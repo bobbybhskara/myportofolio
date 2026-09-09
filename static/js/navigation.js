@@ -2,7 +2,10 @@ if ("scrollRestoration" in history) {
     history.scrollRestoration = "manual";
 }
 
-if (window.location.hash) {
+const navigationEntry = performance.getEntriesByType("navigation")[0];
+const shouldResetScroll = !window.location.hash || navigationEntry?.type === "reload";
+
+if (window.location.hash && shouldResetScroll) {
     history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
 }
 
@@ -15,7 +18,10 @@ const resetScrollPosition = () => {
     });
 };
 
-window.addEventListener("DOMContentLoaded", resetScrollPosition);
+if (shouldResetScroll) {
+    window.addEventListener("DOMContentLoaded", resetScrollPosition);
+}
+
 window.addEventListener("pageshow", (event) => {
     if (event.persisted) {
         resetScrollPosition();

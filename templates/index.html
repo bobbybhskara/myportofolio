@@ -14,12 +14,12 @@
 <body>
     <header class="site-header">
         <div class="container">
-            <a href="#profile" class="brand">{{ name }}</a>
+            <a href="{% url 'main:show_main' %}" class="brand">{{ name }}</a>
             <nav>
-                <a href="#profile">Profile</a>
-                <a href="#projects">Projects</a>
-                <a href="#experience">Experience</a>
-                <a href="#education">Education</a>
+                <a href="{% url 'main:show_main' %}">Profile</a>
+                <a href="{% url 'main:show_main' %}#projects">Projects</a>
+                <a href="{% url 'main:show_experience' %}">Experience</a>
+                <a href="{% url 'main:show_main' %}#education">Education</a>
             </nav>
         </div>
     </header>
@@ -141,76 +141,6 @@
                             <p>Coming Soon!</p>
                         </div>
                     </article>
-                </div>
-            </div>
-        </section>
-
-        <section class="experience" id="experience">
-            <div class="container">
-                <h2 class="section-heading">Experience</h2>
-
-                <div class="timeline">
-                    <ol class="experience-timeline">
-                        <li class="experience-entry is-current">
-                            <div class="experience-content">
-                                <div class="experience-copy">
-                                    <p class="experience-date">Mar 2026 &ndash; Present</p>
-                                    <h3>Expert Staff, Liaison Officer</h3>
-                                    <p class="experience-organization">Open House Fasilkom UI</p>
-                                    <p class="experience-description">PIC for Wall of Dreams, CS Connect, and Tour de Campus programs; supervises a team of first-year Liaison Officer staff.</p>
-                                </div>
-                                <img class="experience-thumbnail" src="/static/img/exp-openhouse-expert.jpg" alt="Expert Staff Liaison Officer at Open House Fasilkom UI">
-                            </div>
-                        </li>
-
-                        <li class="experience-entry is-current">
-                            <div class="experience-content">
-                                <div class="experience-copy">
-                                    <p class="experience-date">Mar 2026 &ndash; Present</p>
-                                    <h3>Staff, Marketing &amp; Communications (D&amp;B Division)</h3>
-                                    <p class="experience-organization">RISTEK Fasilkom UI</p>
-                                    <p class="experience-description">Scripted, filmed, and edited the RISTEK company profile video; produced the BikunTracker motion graphic campaign; produces and hosts Ristalk podcast.</p>
-                                </div>
-                                <img class="experience-thumbnail" src="/static/img/exp-ristek-marketing.jpg" alt="Marketing and Communications staff at RISTEK Fasilkom UI">
-                            </div>
-                        </li>
-
-                        <li class="experience-entry">
-                            <div class="experience-content">
-                                <div class="experience-copy">
-                                    <p class="experience-date">Nov &ndash; Dec 2025</p>
-                                    <h3>Product Management Trainee</h3>
-                                    <p class="experience-organization">Pekan RISTEK</p>
-                                    <p class="experience-description">Completed a hands-on training program on product management fundamentals.</p>
-                                </div>
-                                <img class="experience-thumbnail" src="/static/img/exp-pekanristek.jpg" alt="Pekan RISTEK product management training activity">
-                            </div>
-                        </li>
-
-                        <li class="experience-entry">
-                            <div class="experience-content">
-                                <div class="experience-copy">
-                                    <p class="experience-date">Sep &ndash; Nov 2025</p>
-                                    <h3>Staff, Liaison Officer</h3>
-                                    <p class="experience-organization">Open House Fasilkom UI</p>
-                                    <p class="experience-description">Managed shuttle bus (Bikun) operations during the event amid a building relocation, directing on-ground logistics on event day.</p>
-                                </div>
-                                <img class="experience-thumbnail" src="/static/img/exp-openhouse-staff.jpg" alt="Liaison Officer staff coordinating Open House Fasilkom UI">
-                            </div>
-                        </li>
-
-                        <li class="experience-entry">
-                            <div class="experience-content">
-                                <div class="experience-copy">
-                                    <p class="experience-date">Aug &ndash; Nov 2025</p>
-                                    <h3>Intern, Art and Culture Division</h3>
-                                    <p class="experience-organization">BEM Fasilkom UI</p>
-                                    <p class="experience-description">Helped plan and coordinate arts and culture events for the faculty community.</p>
-                                </div>
-                                <img class="experience-thumbnail" src="/static/img/exp-artculture.jpg" alt="Art and Culture Division event activity at BEM Fasilkom UI">
-                            </div>
-                        </li>
-                    </ol>
                 </div>
             </div>
         </section>

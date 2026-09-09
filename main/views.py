@@ -1,5 +1,7 @@
 from django.shortcuts import render
 
+from main.models import Experience
+
 
 def show_main(request):
     context = {
@@ -14,3 +16,11 @@ def show_main(request):
         ),
     }
     return render(request, "index.html", context)
+
+
+def show_experience(request):
+    context = {
+        "name": "Muhammad Eshan Bobby Bhaskara",
+        "experience_list": Experience.objects.all(),
+    }
+    return render(request, "experience.html", context)

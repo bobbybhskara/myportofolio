@@ -430,102 +430,60 @@ main > section {
     font-size: 0.85rem;
 }
 
-.experience-entry h3 {
+.experience-section {
+    padding: 4rem 0;
+    border-top: 1px solid var(--line);
+}
+
+.section-kicker {
+    color: var(--accent-dark);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.experience-section h1 {
+    margin: 0.4rem 0 1.5rem;
     font-family: "Poppins", -apple-system, sans-serif;
+    font-size: clamp(2rem, 5vw, 3rem);
 }
 
-.timeline {
-    position: relative;
-    width: 100%;
+.experience-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
 }
 
-.experience-timeline {
-    list-style: none;
-}
-
-.timeline::before {
-    content: "";
-    position: absolute;
-    top: 0.5rem;
-    bottom: 0.5rem;
-    left: 0.45rem;
-    width: 2px;
-    background-color: var(--line);
-}
-
-.experience-entry {
-    position: relative;
-    padding: 0 0 2.25rem 2.75rem;
-}
-
-.experience-entry:last-child {
-    padding-bottom: 0;
-}
-
-.experience-entry::before {
-    content: "";
-    position: absolute;
-    top: 0.3rem;
-    left: 0;
-    z-index: 1;
-    width: 0.95rem;
-    height: 0.95rem;
+.experience-card {
+    padding: 1.25rem;
     background-color: var(--paper);
-    border: 2px solid var(--accent);
-    border-radius: 50%;
-}
-
-.experience-entry.is-current::before {
-    background-color: var(--accent);
-}
-
-.experience-content {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: clamp(2rem, 6vw, 6rem);
-}
-
-.experience-copy {
-    flex: 1;
-    min-width: 0;
-}
-
-.experience-thumbnail {
-    flex: 0 0 116px;
-    width: 116px;
-    height: 116px;
-    margin-left: auto;
-    object-fit: cover;
-    object-position: center;
     border: 1px solid var(--line);
     border-radius: var(--radius);
 }
 
-.experience-date {
-    margin-bottom: 0.25rem;
-    color: var(--accent);
-    font-size: 0.78rem;
+.experience-category {
+    color: var(--accent-dark);
+    font-size: 0.75rem;
     font-weight: 700;
-    letter-spacing: 0.05em;
     text-transform: uppercase;
 }
 
-.experience-entry h3 {
-    color: var(--ink);
-    font-size: 1.3rem;
-    line-height: 1.25;
+.experience-card h2 {
+    margin: 0.5rem 0;
+    font-family: "Poppins", -apple-system, sans-serif;
+    font-size: 1.25rem;
 }
 
-.experience-organization {
-    margin: 0.15rem 0 0.35rem;
-    color: var(--ink);
-    font-weight: 600;
-}
-
-.experience-description {
+.experience-description,
+.empty-state {
     color: var(--text-muted);
-    font-size: 0.95rem;
+}
+
+.experience-status {
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
 }
 
 .education-timeline {
@@ -668,45 +626,6 @@ main > section {
 
     .project-grid {
         grid-template-columns: 1fr;
-    }
-
-    .timeline::before {
-        left: 0.3rem;
-    }
-
-    .experience-entry {
-        padding-left: 2rem;
-        padding-bottom: 1.75rem;
-    }
-
-    .experience-entry::before {
-        top: 0.25rem;
-        width: 0.7rem;
-        height: 0.7rem;
-    }
-
-    .experience-entry h3 {
-        font-size: 1.1rem;
-    }
-
-    .experience-date {
-        font-size: 0.7rem;
-    }
-
-    .experience-description {
-        font-size: 0.88rem;
-    }
-
-    .experience-content {
-        flex-direction: column;
-        gap: 0.75rem;
-    }
-
-    .experience-thumbnail {
-        flex-basis: auto;
-        width: 88px;
-        height: 88px;
-        margin-left: 0;
     }
 
     .education-timeline {
