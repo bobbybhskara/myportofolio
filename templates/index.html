@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bobby Bhaskara - Portfolio</title>
+    <title>{{ name }} - Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet">
@@ -14,7 +14,7 @@
 <body>
     <header class="site-header">
         <div class="container">
-            <a href="#profile" class="brand">Bobby Bhaskara</a>
+            <a href="#profile" class="brand">{{ name }}</a>
             <nav>
                 <a href="#profile">Profile</a>
                 <a href="#projects">Projects</a>
@@ -29,17 +29,17 @@
             <div class="container hero-grid">
                 <div class="hero-identity">
                     <p class="hero-kicker">Information Systems &middot; Universitas Indonesia</p>
-                    <h1>Muhammad Eshan Bobby Bhaskara</h1>
+                    <h1>{{ name }}</h1>
                 </div>
                 <div class="hero-photo">
                     <div class="photo-block"></div>
                     <div class="photo-carousel" data-carousel tabindex="0" role="region" aria-label="Bobby's photo gallery">
                         <div class="photo-track" data-carousel-track>
-                            <img class="avatar" src="/static/img/DSC00774.jpg" alt="Portrait of Bobby">
-                            <img class="avatar" src="/static/img/profile-2.jpg" data-fallback="/static/img/DSC00774.jpg" alt="Bobby's second gallery photo">
-                            <img class="avatar" src="/static/img/profile-3.jpg" data-fallback="/static/img/DSC00774.jpg" alt="Bobby's third gallery photo">
-                            <img class="avatar" src="/static/img/profile-4.jpg" data-fallback="/static/img/DSC00774.jpg" alt="Bobby's fourth gallery photo">
-                            <img class="avatar" src="/static/img/profile-5.jpg" data-fallback="/static/img/DSC00774.jpg" alt="Bobby's fifth gallery photo">
+                            <img class="avatar" src="/static/img/DSC00774.jpg" alt="Portrait of {{ name }}">
+                            <img class="avatar" src="/static/img/profile-2.jpg" data-fallback="/static/img/DSC00774.jpg" alt="Second gallery photo of {{ name }}">
+                            <img class="avatar" src="/static/img/profile-3.jpg" data-fallback="/static/img/DSC00774.jpg" alt="Third gallery photo of {{ name }}">
+                            <img class="avatar" src="/static/img/profile-4.jpg" data-fallback="/static/img/DSC00774.jpg" alt="Fourth gallery photo of {{ name }}">
+                            <img class="avatar" src="/static/img/profile-5.jpg" data-fallback="/static/img/DSC00774.jpg" alt="Fifth gallery photo of {{ name }}">
                         </div>
                         <button class="carousel-button carousel-button--previous" type="button" data-carousel-previous aria-label="Show previous photo">&#8592;</button>
                         <button class="carousel-button carousel-button--next" type="button" data-carousel-next aria-label="Show next photo">&#8594;</button>
@@ -47,15 +47,15 @@
                     </div>
                 </div>
                 <div class="hero-details">
-                    <p class="bio">Information Systems student at Fasilkom UI with a growing interest in technology and its impact on society. Working collaboratively, thinking critically, and approaching problems with attention to detail.</p>
+                    <p class="bio">{{ bio }}</p>
                     <dl class="meta-list">
                         <div class="meta-row">
                             <dt>NPM</dt>
-                            <dd>2506546333</dd>
+                            <dd>{{ npm }}</dd>
                         </div>
                         <div class="meta-row">
                             <dt>Program</dt>
-                            <dd>S1 Sistem Informasi</dd>
+                            <dd>{{ study_program }}</dd>
                         </div>
                     </dl>
                     <div class="social-links">
@@ -254,7 +254,7 @@
 
     <footer class="site-footer">
         <div class="container">
-            <p>&copy; 2026 Bobby Bhaskara. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
+            <p>&copy; 2026 {{ name }}. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
         </div>
     </footer>
 </body>
