@@ -31,3 +31,23 @@ class Experience(models.Model):
     @property
     def is_ongoing(self):
         return self.ended_at is None
+    
+class Project(models.Model):
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
+    title = models.CharField(max_length=255)
+    role = models.CharField(max_length=255)
+    description = models.TextField()
+    thumbnail = models.CharField(max_length=255)
+    primary_link_label = models.CharField(max_length=100, blank=True)
+    primary_link_url = models.URLField(blank=True)
+    secondary_link_label = models.CharField(max_length=100, blank=True)
+    secondary_link_url = models.URLField(blank=True)
+    note = models.CharField(max_length=255, blank=True)
+    display_order = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return self.title
