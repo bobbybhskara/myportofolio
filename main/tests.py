@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
-from main.models import Experience
+from main.models import Experience, Project
 
 
 class MainTest(TestCase):
@@ -39,7 +39,7 @@ class MainTest(TestCase):
         self.assertContains(response, self.experience.title)
         self.assertContains(response, self.experience.description)
         self.assertContains(response, "Part-Time")
-        self.assertContains(response, "Sedang berlangsung")
+        self.assertContains(response, "Ongoing")
         self.assertContains(
             response,
             f'href="{reverse("main:show_main")}"',
@@ -55,5 +55,45 @@ class MainTest(TestCase):
         self.experience.save()
         response = self.client.get(reverse("main:show_experience"))
         self.assertFalse(self.experience.is_ongoing)
-        self.assertContains(response, "Selesai")
-        self.assertNotContains(response, "Sedang berlangsung")
+        self.assertContains(response, "Done")
+        self.assertNotContains(response, "Ongoing")
+
+
+class ProjectTest(TestCase):
+    def setUp(self):
+        self.project = Project.objects.create(
+            title="VETO",
+            role="Concept · Design · Direction",
+            description="API-first ODOL middleware.",
+            thumbnail="/static/img/project-veto.jpg",
+            primary_link_label="GitHub",
+            primary_link_url="https://github.com/6avier/veto",
+            display_order=1,
+        )
+
+    def test_project_model(self):
+        self.assertEqual(str(self.project), "VETO")
+        self.assertEqual(self.project.display_order, 1)
+
+    def test_projects_url_is_accessible(self):
+        response = self.client.get(reverse("main:show_projects"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "projects.html")
+
+    def test_project_data_appears(self):
+        response = self.client.get(reverse("main:show_projects"))
+        self.assertContains(response, self.project.title)
+        self.assertContains(response, self.project.role)
+        self.assertContains(response, self.project.description)
+
+    def test_empty_projects_page(self):
+        Project.objects.all().delete()
+        response = self.client.get(reverse("main:show_projects"))
+        self.assertContains(response, "Belum ada proyek yang ditambahkan.")
+
+    def test_main_page_links_to_projects(self):
+        response = self.client.get(reverse("main:show_main"))
+        self.assertContains(
+            response,
+            f'href="{reverse("main:show_projects")}"',
+        )
