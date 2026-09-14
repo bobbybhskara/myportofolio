@@ -1,0 +1,64 @@
+<main>
+    <section class="projects-section">
+        <div class="container">
+            <p class="section-kicker">Selected works</p>
+            <h1>Projects</h1>
+
+            <div class="project-grid">
+                {% for project in project_list %}
+                    <article class="project-card" tabindex="0">
+                        <div class="project-media">
+                            <img
+                                class="project-image"
+                                src="{{ project.thumbnail }}"
+                                alt="Preview of {{ project.title }}"
+                            >
+
+                            <div class="project-overlay">
+                                <h2>{{ project.title }}</h2>
+                                <p class="project-role">{{ project.role }}</p>
+                                <p class="project-description">
+                                    {{ project.description }}
+                                </p>
+
+                                <div class="project-links">
+                                    {% if project.primary_link_url %}
+                                        <a
+                                            href="{{ project.primary_link_url }}"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            {{ project.primary_link_label }}
+                                        </a>
+                                    {% endif %}
+
+                                    {% if project.secondary_link_url %}
+                                        <a
+                                            href="{{ project.secondary_link_url }}"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            {{ project.secondary_link_label }}
+                                        </a>
+                                    {% endif %}
+
+                                    {% if project.note %}
+                                        <span>{{ project.note }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <h2 class="project-mobile-title">
+                            {{ project.title }}
+                        </h2>
+                    </article>
+                {% empty %}
+                    <p class="empty-state">
+                        Belum ada proyek yang ditambahkan.
+                    </p>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+</main>
