@@ -46,6 +46,8 @@ class Project(models.Model):
     primary_link_url = models.URLField(blank=True)
     secondary_link_label = models.CharField(max_length=100, blank=True)
     secondary_link_url = models.URLField(blank=True)
+    third_link_label = models.CharField(max_length=100, blank=True)
+    third_link_url = models.URLField(blank=True)
     note = models.CharField(max_length=255, blank=True)
     display_order = models.PositiveIntegerField(default=0)
 
