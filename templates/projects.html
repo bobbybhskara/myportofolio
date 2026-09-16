@@ -19,6 +19,18 @@
                 </a>
             </div>
 
+            <form method="get" action="{% url 'main:show_projects' %}" class="project-search">
+                <input
+                    type="search"
+                    name="title"
+                    value="{{ title_query }}"
+                    placeholder="Search by project title"
+                    class="project-search__input"
+                    aria-label="Search by project title"
+                >
+                <button type="submit" class="button">Search</button>
+            </form>
+
             <div class="project-grid">
                 {% for project in project_list %}
                     <article class="project-card" tabindex="0">
@@ -79,9 +91,15 @@
                         </h2>
                     </article>
                 {% empty %}
-                    <p class="empty-state">
-                        Belum ada proyek yang ditambahkan.
-                    </p>
+                    {% if title_query %}
+                        <p class="empty-state">
+                            No projects found for "{{ title_query }}".
+                        </p>
+                    {% else %}
+                        <p class="empty-state">
+                            Belum ada proyek yang ditambahkan.
+                        </p>
+                    {% endif %}
                 {% endfor %}
             </div>
         </div>

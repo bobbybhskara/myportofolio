@@ -1,3 +1,5 @@
+import json
+
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
@@ -141,3 +143,58 @@ class ProjectTest(TestCase):
         self.assertTemplateUsed(response, "projects_form.html")
         self.assertContains(response, "This field is required.")
         self.assertEqual(Project.objects.count(), project_count)
+
+    def test_projects_json_endpoint(self):
+        response = self.client.get(reverse("main:get_projects_json"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], "application/json")
+
+        data = json.loads(response.content)
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]["pk"], str(self.project.id))
+        self.assertEqual(data[0]["fields"]["title"], "VETO")
+
+    def test_projects_json_can_filter_by_title(self):
+        Project.objects.create(
+            title="Unrelated Alpha",
+            role="Developer",
+            description="Another project.",
+            thumbnail="/static/img/project-comprof.jpg",
+            display_order=2,
+        )
+
+        response = self.client.get(
+            reverse("main:get_projects_json"),
+            {"title": "veto"},
+        )
+
+        data = json.loads(response.content)
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]["fields"]["title"], "VETO")
+
+    def test_projects_page_can_filter_by_title(self):
+        Project.objects.create(
+            title="Unrelated Alpha",
+            role="Developer",
+            description="Another project.",
+            thumbnail="/static/img/project-comprof.jpg",
+            display_order=2,
+        )
+
+        response = self.client.get(
+            reverse("main:show_projects"),
+            {"title": "veto"},
+        )
+
+        self.assertContains(response, self.project.title)
+        self.assertNotContains(response, "Unrelated Alpha")
+        self.assertContains(response, 'value="veto"')
+
+    def test_projects_page_shows_search_empty_state(self):
+        response = self.client.get(
+            reverse("main:show_projects"),
+            {"title": "missing"},
+        )
+
+        self.assertContains(response, 'No projects found for "missing".')
