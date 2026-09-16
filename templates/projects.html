@@ -82,9 +82,20 @@
                                     {% if project.note %}
                                         <span>{{ project.note }}</span>
                                     {% endif %}
+
+                                    <button
+                                        type="button"
+                                        class="project-delete-trigger"
+                                        popovertarget="delete-project-{{ project.id }}"
+                                        aria-label="Delete {{ project.title }}"
+                                    >
+                                        Delete
+                                    </button>
                                 </div>
                             </div>
                         </div>
+
+                        {% include "components/project_delete_modal.html" with project=project %}
 
                         <h2 class="project-mobile-title">
                             {{ project.title }}

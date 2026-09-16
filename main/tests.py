@@ -1,4 +1,5 @@
 import json
+import uuid
 
 from django.test import TestCase
 from django.urls import reverse
@@ -198,3 +199,36 @@ class ProjectTest(TestCase):
         )
 
         self.assertContains(response, 'No projects found for "missing".')
+
+    def test_projects_page_contains_delete_confirmation(self):
+        response = self.client.get(reverse("main:show_projects"))
+        delete_url = reverse("main:delete_project", args=[self.project.id])
+
+        self.assertContains(response, "Delete Project?")
+        self.assertContains(response, f'action="{delete_url}"')
+        self.assertContains(response, "csrfmiddlewaretoken")
+
+    def test_delete_project_with_post(self):
+        response = self.client.post(
+            reverse("main:delete_project", args=[self.project.id]),
+            follow=True,
+        )
+
+        self.assertRedirects(response, reverse("main:show_projects"))
+        self.assertFalse(Project.objects.filter(pk=self.project.id).exists())
+        self.assertContains(response, "Project deleted successfully!")
+
+    def test_delete_project_rejects_get(self):
+        response = self.client.get(
+            reverse("main:delete_project", args=[self.project.id]),
+        )
+
+        self.assertEqual(response.status_code, 405)
+        self.assertTrue(Project.objects.filter(pk=self.project.id).exists())
+
+    def test_delete_project_returns_404_for_unknown_id(self):
+        response = self.client.post(
+            reverse("main:delete_project", args=[uuid.uuid4()]),
+        )
+
+        self.assertEqual(response.status_code, 404)

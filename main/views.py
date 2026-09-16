@@ -1,7 +1,8 @@
 from django.contrib import messages
 from django.core import serializers
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
 
 from main.forms import ProjectForm
 from main.models import Experience, Project
@@ -28,6 +29,7 @@ def show_experience(request):
         "experience_list": Experience.objects.all(),
     }
     return render(request, "experience.html", context)
+
 
 def get_projects_json(request):
     title_query = request.GET.get("title", "").strip()
@@ -69,3 +71,11 @@ def create_project(request):
         "form": form,
     }
     return render(request, "projects_form.html", context)
+
+
+@require_POST
+def delete_project(request, project_id):
+    project = get_object_or_404(Project, pk=project_id)
+    project.delete()
+    messages.success(request, "Project deleted successfully!")
+    return redirect("main:show_projects")

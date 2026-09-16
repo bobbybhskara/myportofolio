@@ -748,6 +748,92 @@ main > section {
     box-shadow: 0 0 0 3px rgba(91, 127, 166, 0.2);
 }
 
+.project-delete-trigger {
+    padding: 0;
+    color: #fca5a5;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 700;
+}
+
+.project-delete-trigger:hover,
+.project-delete-trigger:focus-visible {
+    color: #fecaca;
+    text-decoration: underline;
+}
+
+.project-delete-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 1rem;
+    background: transparent;
+    border: 0;
+    z-index: 10;
+    align-items: center;
+    justify-content: center;
+}
+
+.project-delete-modal:popover-open {
+    display: flex;
+}
+
+.project-delete-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    background: rgba(30, 42, 74, 0.65);
+    border: 0;
+    cursor: default;
+}
+
+.project-delete-modal__content {
+    position: relative;
+    z-index: 1;
+    width: min(100%, 480px);
+    padding: 1.5rem;
+    color: var(--ink);
+    background-color: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 1rem 3rem rgba(30, 42, 74, 0.25);
+}
+
+.project-delete-modal__content h2 {
+    margin: 0 2rem 0.75rem 0;
+    font-family: "Poppins", -apple-system, sans-serif;
+    font-size: 1.5rem;
+}
+
+.project-delete-modal__close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0;
+    color: var(--text-muted);
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    font-size: 1.8rem;
+    line-height: 1;
+}
+
+.project-delete-modal__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
 .project-form {
     width: min(100%, 760px);
     margin-top: 1.5rem;
@@ -826,6 +912,15 @@ main > section {
     background-color: var(--ink);
 }
 
+.button-danger {
+    background-color: #b42318;
+}
+
+.button-danger:hover,
+.button-danger:focus-visible {
+    background-color: #912018;
+}
+
 .messages {
     padding-top: 1rem;
 }
@@ -859,6 +954,26 @@ main > section {
 
     .project-search .button {
         width: 100%;
+    }
+
+    .project-delete-modal {
+        align-items: flex-end;
+        padding: 0;
+    }
+
+    .project-delete-modal__content {
+        width: 100%;
+        padding: 1.25rem;
+        border-radius: var(--radius) var(--radius) 0 0;
+    }
+
+    .project-delete-modal__actions {
+        flex-direction: column-reverse;
+    }
+
+    .project-delete-modal__actions .button {
+        width: 100%;
+        text-align: center;
     }
 
     .form-actions {
