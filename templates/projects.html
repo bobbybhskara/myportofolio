@@ -8,8 +8,16 @@
 <main>
     <section class="projects-section">
         <div class="container">
-            <p class="section-kicker">Selected works</p>
-            <h1>Projects</h1>
+            <div class="project-header">
+                <div>
+                    <p class="section-kicker">Selected works</p>
+                    <h1>Projects</h1>
+                </div>
+                <a href="{% url 'main:create_project' %}" class="button project-add-button">
+                    <span aria-hidden="true">+</span>
+                    Add Project
+                </a>
+            </div>
 
             <div class="project-grid">
                 {% for project in project_list %}

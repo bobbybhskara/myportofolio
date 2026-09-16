@@ -97,3 +97,47 @@ class ProjectTest(TestCase):
             response,
             f'href="{reverse("main:show_projects")}"',
         )
+
+    def test_create_project_page_is_accessible(self):
+        response = self.client.get(reverse("main:create_project"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "projects_form.html")
+        self.assertContains(response, "Add New Project")
+        self.assertContains(response, "csrfmiddlewaretoken")
+
+    def test_create_project_with_valid_data(self):
+        response = self.client.post(
+            reverse("main:create_project"),
+            {
+                "title": "New Portfolio",
+                "role": "Designer & Developer",
+                "description": "A new portfolio project.",
+                "thumbnail": "/static/img/project-comprof.jpg",
+                "primary_link_label": "GitHub",
+                "primary_link_url": "https://github.com/example/portfolio",
+                "display_order": 2,
+            },
+            follow=True,
+        )
+
+        self.assertRedirects(response, reverse("main:show_projects"))
+        self.assertTrue(Project.objects.filter(title="New Portfolio").exists())
+        self.assertContains(response, "Project added successfully!")
+
+    def test_create_project_with_invalid_data(self):
+        project_count = Project.objects.count()
+        response = self.client.post(
+            reverse("main:create_project"),
+            {
+                "title": "",
+                "role": "Developer",
+                "description": "Missing a required title.",
+                "thumbnail": "/static/img/project-comprof.jpg",
+                "display_order": 2,
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "projects_form.html")
+        self.assertContains(response, "This field is required.")
+        self.assertEqual(Project.objects.count(), project_count)
