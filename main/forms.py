@@ -1,6 +1,35 @@
 from django.forms import ModelForm, NumberInput, Textarea, TextInput, URLInput
 
-from main.models import Project
+from main.models import Experience, Project
+
+
+class ExperienceForm(ModelForm):
+    class Meta:
+        model = Experience
+        fields = [
+            "title",
+            "description",
+            "category",
+            "thumbnail",
+        ]
+        labels = {
+            "title": "Experience title",
+            "description": "Description",
+            "category": "Category",
+            "thumbnail": "Thumbnail URL",
+        }
+        widgets = {
+            "title": TextInput(attrs={"placeholder": "Marketing Staff at RISTEK"}),
+            "description": Textarea(
+                attrs={
+                    "placeholder": "Describe the experience and your contribution",
+                    "rows": 4,
+                }
+            ),
+            "thumbnail": URLInput(
+                attrs={"placeholder": "https://example.com/image.jpg"}
+            ),
+        }
 
 
 class ProjectForm(ModelForm):

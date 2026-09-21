@@ -61,6 +61,129 @@ class MainTest(TestCase):
         self.assertContains(response, "Done")
         self.assertNotContains(response, "Ongoing")
 
+    def test_create_experience_page_is_accessible(self):
+        response = self.client.get(reverse("main:create_experience"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "experience_form.html")
+        self.assertContains(response, "Add Experience")
+        self.assertContains(response, "csrfmiddlewaretoken")
+        self.assertEqual(
+            list(response.context["form"].fields),
+            ["title", "description", "category", "thumbnail"],
+        )
+
+    def test_create_experience_with_valid_data(self):
+        response = self.client.post(
+            reverse("main:create_experience"),
+            {
+                "title": "Product Design Intern",
+                "description": "Designed and tested product flows.",
+                "category": "internship",
+                "thumbnail": "https://example.com/internship.jpg",
+            },
+            follow=True,
+        )
+
+        self.assertRedirects(response, reverse("main:show_experience"))
+        self.assertTrue(
+            Experience.objects.filter(title="Product Design Intern").exists()
+        )
+        self.assertContains(response, "Experience added successfully!")
+
+    def test_create_experience_with_invalid_data(self):
+        experience_count = Experience.objects.count()
+        response = self.client.post(
+            reverse("main:create_experience"),
+            {
+                "title": "",
+                "description": "Missing a required title.",
+                "category": "internship",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "experience_form.html")
+        self.assertContains(response, "This field is required.")
+        self.assertEqual(Experience.objects.count(), experience_count)
+
+    def test_update_experience_page_is_prefilled(self):
+        response = self.client.get(
+            reverse("main:update_experience", args=[self.experience.id])
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "experience_form.html")
+        self.assertContains(response, "Update Experience")
+        self.assertContains(response, f'value="{self.experience.title}"')
+
+    def test_update_experience_with_valid_data(self):
+        experience_count = Experience.objects.count()
+        response = self.client.post(
+            reverse("main:update_experience", args=[self.experience.id]),
+            {
+                "title": "Teaching Assistant PBP",
+                "description": "Helped students learn Django.",
+                "category": "part-time",
+                "thumbnail": "https://example.com/teaching.jpg",
+            },
+            follow=True,
+        )
+
+        self.experience.refresh_from_db()
+        self.assertRedirects(response, reverse("main:show_experience"))
+        self.assertEqual(Experience.objects.count(), experience_count)
+        self.assertEqual(self.experience.title, "Teaching Assistant PBP")
+        self.assertEqual(self.experience.description, "Helped students learn Django.")
+        self.assertContains(response, "Experience updated successfully!")
+
+    def test_update_experience_returns_404_for_unknown_id(self):
+        response = self.client.get(
+            reverse("main:update_experience", args=[uuid.uuid4()])
+        )
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_experience_page_shows_thumbnail_and_actions(self):
+        self.experience.thumbnail = "https://example.com/experience.jpg"
+        self.experience.save()
+
+        response = self.client.get(reverse("main:show_experience"))
+        update_url = reverse("main:update_experience", args=[self.experience.id])
+
+        self.assertContains(response, self.experience.thumbnail)
+        self.assertContains(response, f'href="{reverse("main:create_experience")}"')
+        self.assertContains(response, f'href="{update_url}"')
+
+    def test_experiences_json_endpoint(self):
+        response = self.client.get(reverse("main:get_experiences_json"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], "application/json")
+
+        data = json.loads(response.content)
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]["model"], "main.experience")
+        self.assertEqual(data[0]["pk"], str(self.experience.id))
+        self.assertEqual(data[0]["fields"]["title"], self.experience.title)
+        self.assertEqual(data[0]["fields"]["category"], "part-time")
+
+    def test_experiences_json_endpoint_returns_empty_list(self):
+        Experience.objects.all().delete()
+
+        response = self.client.get(reverse("main:get_experiences_json"))
+
+        self.assertEqual(json.loads(response.content), [])
+
+    def test_experience_page_uses_deserialized_objects(self):
+        response = self.client.get(reverse("main:show_experience"))
+        experience_list = response.context["experience_list"]
+
+        self.assertIsInstance(experience_list, list)
+        self.assertEqual(len(experience_list), 1)
+        self.assertIsInstance(experience_list[0], Experience)
+        self.assertEqual(experience_list[0].id, self.experience.id)
+
 
 class ProjectTest(TestCase):
     def setUp(self):
