@@ -1,15 +1,15 @@
 <div
-    id="delete-project-{{ project.id }}"
+    id="delete-experience-{{ experience.id }}"
     class="delete-modal"
     popover="auto"
     role="dialog"
     aria-modal="true"
-    aria-labelledby="delete-project-title-{{ project.id }}"
+    aria-labelledby="delete-experience-title-{{ experience.id }}"
 >
     <button
         type="button"
         class="delete-modal__backdrop"
-        popovertarget="delete-project-{{ project.id }}"
+        popovertarget="delete-experience-{{ experience.id }}"
         popovertargetaction="hide"
         aria-label="Close delete confirmation"
     ></button>
@@ -18,29 +18,31 @@
         <button
             type="button"
             class="delete-modal__close"
-            popovertarget="delete-project-{{ project.id }}"
+            popovertarget="delete-experience-{{ experience.id }}"
             popovertargetaction="hide"
             aria-label="Close delete confirmation"
         >
             &times;
         </button>
 
-        <h2 id="delete-project-title-{{ project.id }}">Delete Project?</h2>
+        <h2 id="delete-experience-title-{{ experience.id }}">
+            Delete Experience?
+        </h2>
         <p>
             Are you sure you want to delete
-            <strong>{{ project.title }}</strong>?
+            <strong>{{ experience.title }}</strong>?
         </p>
 
         <form
             method="post"
-            action="{% url 'main:delete_project' project.id %}"
+            action="{% url 'main:delete_experience' experience.id %}"
             class="delete-modal__actions"
         >
             {% csrf_token %}
             <button
                 type="button"
                 class="button button-secondary"
-                popovertarget="delete-project-{{ project.id }}"
+                popovertarget="delete-experience-{{ experience.id }}"
                 popovertargetaction="hide"
             >
                 Cancel

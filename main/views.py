@@ -82,6 +82,14 @@ def update_experience(request, experience_id):
     return render(request, "experience_form.html", context)
 
 
+@require_POST
+def delete_experience(request, experience_id):
+    experience = get_object_or_404(Experience, pk=experience_id)
+    experience.delete()
+    messages.success(request, "Experience deleted successfully!")
+    return redirect("main:show_experience")
+
+
 def get_projects_json(request):
     title_query = request.GET.get("title", "").strip()
     projects = Project.objects.order_by("display_order", "title")

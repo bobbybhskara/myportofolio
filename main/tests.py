@@ -184,6 +184,39 @@ class MainTest(TestCase):
         self.assertIsInstance(experience_list[0], Experience)
         self.assertEqual(experience_list[0].id, self.experience.id)
 
+    def test_experience_page_contains_delete_confirmation(self):
+        response = self.client.get(reverse("main:show_experience"))
+        delete_url = reverse("main:delete_experience", args=[self.experience.id])
+
+        self.assertContains(response, "Delete Experience?")
+        self.assertContains(response, f'action="{delete_url}"')
+        self.assertContains(response, "csrfmiddlewaretoken")
+
+    def test_delete_experience_with_post(self):
+        response = self.client.post(
+            reverse("main:delete_experience", args=[self.experience.id]),
+            follow=True,
+        )
+
+        self.assertRedirects(response, reverse("main:show_experience"))
+        self.assertFalse(Experience.objects.filter(pk=self.experience.id).exists())
+        self.assertContains(response, "Experience deleted successfully!")
+
+    def test_delete_experience_rejects_get(self):
+        response = self.client.get(
+            reverse("main:delete_experience", args=[self.experience.id])
+        )
+
+        self.assertEqual(response.status_code, 405)
+        self.assertTrue(Experience.objects.filter(pk=self.experience.id).exists())
+
+    def test_delete_experience_returns_404_for_unknown_id(self):
+        response = self.client.post(
+            reverse("main:delete_experience", args=[uuid.uuid4()])
+        )
+
+        self.assertEqual(response.status_code, 404)
+
 
 class ProjectTest(TestCase):
     def setUp(self):

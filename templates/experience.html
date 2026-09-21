@@ -48,7 +48,15 @@
                                 >
                                     Edit
                                 </a>
+                                <button
+                                    type="button"
+                                    class="button button-danger"
+                                    popovertarget="delete-experience-{{ experience.id }}"
+                                >
+                                    Delete
+                                </button>
                             </div>
+                            {% include "components/experience_delete_modal.html" with experience=experience %}
                         </article>
                     {% empty %}
                         <p class="empty-state">
