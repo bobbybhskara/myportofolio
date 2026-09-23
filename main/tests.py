@@ -1,4 +1,5 @@
 import json
+import re
 import uuid
 
 from django.contrib.auth.models import User
@@ -97,6 +98,21 @@ class AuthenticationTest(TestCase):
             str(self.user.pk),
         )
 
+    def test_login_sets_last_login_cookie(self):
+        response = self.client.post(
+            reverse("main:login"),
+            {
+                "username": self.user.username,
+                "password": self.password,
+            },
+        )
+
+        self.assertIn("last_login", response.cookies)
+        self.assertRegex(
+            response.cookies["last_login"].value,
+            re.compile(r"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$"),
+        )
+
     def test_login_rejects_invalid_credentials(self):
         response = self.client.post(
             reverse("main:login"),
@@ -123,11 +139,27 @@ class AuthenticationTest(TestCase):
 
     def test_logout_clears_authenticated_session(self):
         self.client.force_login(self.user)
+        self.client.cookies["last_login"] = "2026-09-23 10:30:00"
 
         response = self.client.get(reverse("main:logout"))
 
         self.assertRedirects(response, reverse("main:show_main"))
         self.assertNotIn("_auth_user_id", self.client.session)
+        self.assertEqual(response.cookies["last_login"].value, "")
+        self.assertEqual(response.cookies["last_login"]["max-age"], 0)
+
+    def test_main_page_displays_last_login_cookie(self):
+        last_login = "2026-09-23 10:30:00"
+        self.client.cookies["last_login"] = last_login
+
+        response = self.client.get(reverse("main:show_main"))
+
+        self.assertContains(response, last_login)
+
+    def test_main_page_displays_default_without_last_login_cookie(self):
+        response = self.client.get(reverse("main:show_main"))
+
+        self.assertContains(response, "No previous login session found")
 
 
 class MainTest(TestCase):

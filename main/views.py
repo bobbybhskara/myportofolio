@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
@@ -30,7 +32,12 @@ def login_user(request):
 
     if request.method == "POST" and form.is_valid():
         login(request, form.get_user())
-        return redirect("main:show_main")
+        response = redirect("main:show_main")
+        response.set_cookie(
+            "last_login",
+            datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        )
+        return response
 
     context = {
         "name": "Muhammad Eshan Bobby Bhaskara",
@@ -41,10 +48,16 @@ def login_user(request):
 
 def logout_user(request):
     logout(request)
-    return redirect("main:show_main")
+    response = redirect("main:show_main")
+    response.delete_cookie("last_login")
+    return response
 
 
 def show_main(request):
+    last_login = request.COOKIES.get(
+        "last_login",
+        "No previous login session found",
+    )
     context = {
         "name": "Muhammad Eshan Bobby Bhaskara",
         "npm": "2506546333",
@@ -55,6 +68,7 @@ def show_main(request):
             "collaboratively, thinking critically, and approaching problems "
             "with attention to detail."
         ),
+        "last_login": last_login,
     }
     return render(request, "index.html", context)
 
