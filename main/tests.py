@@ -374,6 +374,16 @@ class MainTest(TestCase):
 
 class ProjectTest(TestCase):
     def setUp(self):
+        self.password = "StrongPassword123!"
+        self.regular_user = User.objects.create_user(
+            username="regular_user",
+            password=self.password,
+        )
+        self.superuser = User.objects.create_superuser(
+            username="portfolio_owner",
+            password=self.password,
+            email="owner@example.com",
+        )
         self.project = Project.objects.create(
             title="VETO",
             role="Concept · Design · Direction",
@@ -412,6 +422,7 @@ class ProjectTest(TestCase):
         )
 
     def test_create_project_page_is_accessible(self):
+        self.client.force_login(self.superuser)
         response = self.client.get(reverse("main:create_project"))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "projects_form.html")
@@ -419,6 +430,7 @@ class ProjectTest(TestCase):
         self.assertContains(response, "csrfmiddlewaretoken")
 
     def test_create_project_with_valid_data(self):
+        self.client.force_login(self.superuser)
         response = self.client.post(
             reverse("main:create_project"),
             {
@@ -438,6 +450,7 @@ class ProjectTest(TestCase):
         self.assertContains(response, "Project added successfully!")
 
     def test_create_project_with_invalid_data(self):
+        self.client.force_login(self.superuser)
         project_count = Project.objects.count()
         response = self.client.post(
             reverse("main:create_project"),
@@ -511,6 +524,7 @@ class ProjectTest(TestCase):
         self.assertContains(response, 'No projects found for "missing".')
 
     def test_projects_page_contains_delete_confirmation(self):
+        self.client.force_login(self.superuser)
         response = self.client.get(reverse("main:show_projects"))
         delete_url = reverse("main:delete_project", args=[self.project.id])
 
@@ -519,6 +533,7 @@ class ProjectTest(TestCase):
         self.assertContains(response, "csrfmiddlewaretoken")
 
     def test_delete_project_with_post(self):
+        self.client.force_login(self.superuser)
         response = self.client.post(
             reverse("main:delete_project", args=[self.project.id]),
             follow=True,
@@ -529,6 +544,7 @@ class ProjectTest(TestCase):
         self.assertContains(response, "Project deleted successfully!")
 
     def test_delete_project_rejects_get(self):
+        self.client.force_login(self.superuser)
         response = self.client.get(
             reverse("main:delete_project", args=[self.project.id]),
         )
@@ -537,8 +553,76 @@ class ProjectTest(TestCase):
         self.assertTrue(Project.objects.filter(pk=self.project.id).exists())
 
     def test_delete_project_returns_404_for_unknown_id(self):
+        self.client.force_login(self.superuser)
         response = self.client.post(
             reverse("main:delete_project", args=[uuid.uuid4()]),
         )
 
         self.assertEqual(response.status_code, 404)
+
+    def test_anonymous_user_is_redirected_from_create_project(self):
+        create_url = reverse("main:create_project")
+
+        response = self.client.get(create_url)
+
+        self.assertRedirects(
+            response,
+            f'{reverse("main:login")}?next={create_url}',
+            fetch_redirect_response=False,
+        )
+
+    def test_regular_user_cannot_access_create_project(self):
+        self.client.force_login(self.regular_user)
+
+        response = self.client.get(reverse("main:create_project"))
+
+        self.assertEqual(response.status_code, 403)
+
+    def test_anonymous_user_is_redirected_from_delete_project(self):
+        delete_url = reverse("main:delete_project", args=[self.project.id])
+
+        response = self.client.post(delete_url)
+
+        self.assertRedirects(
+            response,
+            f'{reverse("main:login")}?next={delete_url}',
+            fetch_redirect_response=False,
+        )
+        self.assertTrue(Project.objects.filter(pk=self.project.id).exists())
+
+    def test_regular_user_cannot_delete_project(self):
+        self.client.force_login(self.regular_user)
+
+        response = self.client.post(
+            reverse("main:delete_project", args=[self.project.id])
+        )
+
+        self.assertEqual(response.status_code, 403)
+        self.assertTrue(Project.objects.filter(pk=self.project.id).exists())
+
+    def test_project_controls_are_hidden_from_non_superusers(self):
+        create_url = reverse("main:create_project")
+        delete_url = reverse("main:delete_project", args=[self.project.id])
+
+        anonymous_response = self.client.get(reverse("main:show_projects"))
+        self.assertNotContains(anonymous_response, f'href="{create_url}"')
+        self.assertNotContains(anonymous_response, f'action="{delete_url}"')
+
+        self.client.force_login(self.regular_user)
+        regular_response = self.client.get(reverse("main:show_projects"))
+        self.assertNotContains(regular_response, f'href="{create_url}"')
+        self.assertNotContains(regular_response, f'action="{delete_url}"')
+
+    def test_project_controls_are_visible_to_superuser(self):
+        self.client.force_login(self.superuser)
+
+        response = self.client.get(reverse("main:show_projects"))
+
+        self.assertContains(
+            response,
+            f'href="{reverse("main:create_project")}"',
+        )
+        self.assertContains(
+            response,
+            f'action="{reverse("main:delete_project", args=[self.project.id])}"',
+        )

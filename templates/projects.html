@@ -13,10 +13,12 @@
                     <p class="section-kicker">Selected works</p>
                     <h1>Projects</h1>
                 </div>
-                <a href="{% url 'main:create_project' %}" class="button project-add-button">
-                    <span aria-hidden="true">+</span>
-                    Add Project
-                </a>
+                {% if user.is_superuser %}
+                    <a href="{% url 'main:create_project' %}" class="button project-add-button">
+                        <span aria-hidden="true">+</span>
+                        Add Project
+                    </a>
+                {% endif %}
             </div>
 
             <form method="get" action="{% url 'main:show_projects' %}" class="project-search">
@@ -83,19 +85,23 @@
                                         <span>{{ project.note }}</span>
                                     {% endif %}
 
-                                    <button
-                                        type="button"
-                                        class="project-delete-trigger"
-                                        popovertarget="delete-project-{{ project.id }}"
-                                        aria-label="Delete {{ project.title }}"
-                                    >
-                                        Delete
-                                    </button>
+                                    {% if user.is_superuser %}
+                                        <button
+                                            type="button"
+                                            class="project-delete-trigger"
+                                            popovertarget="delete-project-{{ project.id }}"
+                                            aria-label="Delete {{ project.title }}"
+                                        >
+                                            Delete
+                                        </button>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
 
-                        {% include "components/project_delete_modal.html" with project=project %}
+                        {% if user.is_superuser %}
+                            {% include "components/project_delete_modal.html" with project=project %}
+                        {% endif %}
 
                         <h2 class="project-mobile-title">
                             {{ project.title }}
