@@ -1,11 +1,133 @@
 import json
 import uuid
 
+from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
 from main.models import Experience, Project
+
+
+class AuthenticationTest(TestCase):
+    def setUp(self):
+        self.password = "StrongPassword123!"
+        self.user = User.objects.create_user(
+            username="existing_user",
+            password=self.password,
+        )
+
+    def test_register_page_is_accessible(self):
+        response = self.client.get(reverse("main:register"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "register.html")
+        self.assertContains(response, "csrfmiddlewaretoken")
+        self.assertEqual(
+            list(response.context["form"].fields),
+            ["username", "password1", "password2"],
+        )
+
+    def test_register_with_valid_data(self):
+        response = self.client.post(
+            reverse("main:register"),
+            {
+                "username": "new_user",
+                "password1": self.password,
+                "password2": self.password,
+            },
+            follow=True,
+        )
+
+        self.assertRedirects(response, reverse("main:login"))
+        new_user = User.objects.get(username="new_user")
+        self.assertTrue(new_user.check_password(self.password))
+        self.assertContains(
+            response,
+            "Account created successfully. Please log in.",
+        )
+
+    def test_register_rejects_mismatched_passwords(self):
+        response = self.client.post(
+            reverse("main:register"),
+            {
+                "username": "new_user",
+                "password1": self.password,
+                "password2": "DifferentPassword123!",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context["form"].errors)
+        self.assertFalse(User.objects.filter(username="new_user").exists())
+
+    def test_register_rejects_duplicate_username(self):
+        response = self.client.post(
+            reverse("main:register"),
+            {
+                "username": self.user.username,
+                "password1": self.password,
+                "password2": self.password,
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("username", response.context["form"].errors)
+        self.assertEqual(User.objects.filter(username=self.user.username).count(), 1)
+
+    def test_login_page_is_accessible(self):
+        response = self.client.get(reverse("main:login"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "login.html")
+        self.assertContains(response, "csrfmiddlewaretoken")
+
+    def test_login_with_valid_credentials(self):
+        response = self.client.post(
+            reverse("main:login"),
+            {
+                "username": self.user.username,
+                "password": self.password,
+            },
+        )
+
+        self.assertRedirects(response, reverse("main:show_main"))
+        self.assertEqual(
+            str(self.client.session["_auth_user_id"]),
+            str(self.user.pk),
+        )
+
+    def test_login_rejects_invalid_credentials(self):
+        response = self.client.post(
+            reverse("main:login"),
+            {
+                "username": self.user.username,
+                "password": "WrongPassword123!",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context["form"].non_field_errors())
+        self.assertNotIn("_auth_user_id", self.client.session)
+
+    def test_navbar_changes_after_login(self):
+        anonymous_response = self.client.get(reverse("main:show_main"))
+        self.assertContains(anonymous_response, reverse("main:login"))
+        self.assertContains(anonymous_response, reverse("main:register"))
+
+        self.client.force_login(self.user)
+        authenticated_response = self.client.get(reverse("main:show_main"))
+        self.assertContains(authenticated_response, self.user.username)
+        self.assertContains(authenticated_response, reverse("main:logout"))
+        self.assertNotContains(authenticated_response, reverse("main:register"))
+
+    def test_logout_clears_authenticated_session(self):
+        self.client.force_login(self.user)
+
+        response = self.client.get(reverse("main:logout"))
+
+        self.assertRedirects(response, reverse("main:show_main"))
+        self.assertNotIn("_auth_user_id", self.client.session)
 
 
 class MainTest(TestCase):
