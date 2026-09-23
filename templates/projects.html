@@ -85,6 +85,8 @@
                                         <span>{{ project.note }}</span>
                                     {% endif %}
 
+                                    {% include "components/project_star.html" with project=project %}
+
                                     {% if user.is_superuser %}
                                         <button
                                             type="button"

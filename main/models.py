@@ -1,5 +1,6 @@
 import uuid
 
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -50,6 +51,11 @@ class Project(models.Model):
     third_link_url = models.URLField(blank=True)
     note = models.CharField(max_length=255, blank=True)
     display_order = models.PositiveIntegerField(default=0)
+    starred_by = models.ManyToManyField(
+        User,
+        related_name="starred_projects",
+        blank=True,
+    )
 
     def __str__(self):
         return self.title

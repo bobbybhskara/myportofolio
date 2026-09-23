@@ -824,6 +824,28 @@ main > section {
     text-decoration: underline;
 }
 
+.star-form {
+    display: inline;
+}
+
+.button-star {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background-color: var(--ink);
+}
+
+.button-star.is-starred {
+    background-color: var(--accent);
+}
+
+.star-count {
+    padding: 0.05rem 0.4rem;
+    background-color: rgba(255, 255, 255, 0.25);
+    border-radius: 999px;
+    font-size: 0.8rem;
+}
+
 .delete-modal {
     display: none;
     position: fixed;

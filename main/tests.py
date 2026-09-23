@@ -626,3 +626,67 @@ class ProjectTest(TestCase):
             response,
             f'action="{reverse("main:delete_project", args=[self.project.id])}"',
         )
+
+    def test_anonymous_user_is_redirected_from_toggle_star(self):
+        star_url = reverse("main:toggle_star", args=[self.project.id])
+
+        response = self.client.post(star_url)
+
+        self.assertRedirects(
+            response,
+            f'{reverse("main:login")}?next={star_url}',
+            fetch_redirect_response=False,
+        )
+        self.assertEqual(self.project.starred_by.count(), 0)
+
+    def test_logged_in_user_can_star_and_unstar_project(self):
+        self.client.force_login(self.regular_user)
+        star_url = reverse("main:toggle_star", args=[self.project.id])
+
+        star_response = self.client.post(star_url)
+
+        self.assertRedirects(star_response, reverse("main:show_projects"))
+        self.assertTrue(self.project.starred_by.filter(pk=self.regular_user.pk).exists())
+        self.assertTrue(
+            self.regular_user.starred_projects.filter(pk=self.project.pk).exists()
+        )
+
+        unstar_response = self.client.post(star_url)
+
+        self.assertRedirects(unstar_response, reverse("main:show_projects"))
+        self.assertFalse(
+            self.project.starred_by.filter(pk=self.regular_user.pk).exists()
+        )
+
+    def test_get_request_does_not_change_project_star(self):
+        self.client.force_login(self.regular_user)
+
+        response = self.client.get(
+            reverse("main:toggle_star", args=[self.project.id])
+        )
+
+        self.assertRedirects(response, reverse("main:show_projects"))
+        self.assertEqual(self.project.starred_by.count(), 0)
+
+    def test_multiple_users_can_star_the_same_project(self):
+        self.project.starred_by.add(self.regular_user, self.superuser)
+
+        self.assertEqual(self.project.starred_by.count(), 2)
+
+    def test_projects_page_shows_star_state_and_count(self):
+        self.project.starred_by.add(self.regular_user)
+        self.client.force_login(self.regular_user)
+
+        response = self.client.get(reverse("main:show_projects"))
+
+        self.assertContains(response, "Unstar")
+        self.assertContains(response, 'class="star-count">1</span>')
+        self.assertContains(response, self.regular_user.username)
+
+    def test_projects_json_uses_usernames_for_stars(self):
+        self.project.starred_by.add(self.regular_user)
+
+        response = self.client.get(reverse("main:get_projects_json"))
+
+        data = json.loads(response.content)
+        self.assertEqual(data[0]["fields"]["starred_by"], [["regular_user"]])
